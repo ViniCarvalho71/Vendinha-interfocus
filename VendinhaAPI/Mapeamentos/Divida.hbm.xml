@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping
+        xmlns="urn:nhibernate-mapping-2.2"
+        namespace="VendinhaAPI.Models"
+        assembly="VendinhaAPI">
+
+    <class name="Divida" lazy="false" table="dividas">
+        <id name="Id" column="id" type="long">
+            <generator class="sequence">
+                <param name="sequence">dividas_seq</param>
+            </generator>
+        </id>
+
+        <property name="Valor"	type="decimal" not-null="true" />
+        <property name="Situacao"	type="boolean"/>
+        <property name="DataPagamento" type="date" />
+        <property name="DataCadastro"	type="DateTime" not-null="true" />
+        <property name="Descricao"	type="string" length="5000"/>
+
+        <many-to-one name="Cliente"
+                     column="clienteid"
+                     fetch="join"
+                     foreign-key="fk_divida_cliente" />
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,25 @@
+create sequence clientes_seq;
+create sequence dividas_seq;
+
+create table clientes (
+	id bigint not null default nextval('clientes_seq'),
+	nome varchar(100) not null,
+	cpf varchar(14) not null unique,
+	datanascimento date not null,
+	email varchar(254) unique,
+	primary key (id)
+);
+
+
+create table dividas (
+	id bigint not null default nextval('dividas_seq'),
+	clienteid bigint,
+	valor decimal(10,2) not null,
+	situacao boolean not null,
+	datapagamento date,
+	datacriacao timestamp not null default now(),
+	descricao text,
+	primary key (id),
+	constraint fk_divida_cliente foreign key (clienteid)
+	references clientes(id)
+);

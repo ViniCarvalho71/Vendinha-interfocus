@@ -7,12 +7,18 @@ public class Cliente
 {
     public long Id { get; set; }
     [Required]
+    [StringLength(100)]
     public string Nome { get; set; }
     [Required]
+    [StringLength(14)]
     public string Cpf { get; set; }
+    [EmailAddress]
+    [StringLength(254)]
     public string Email { get; set; }
     [Required]
     public DateTime? DataNascimento { get; set; }
+    
+    public List<Divida> Dividas { get; set; }
 
     public int Idade { get
     {
