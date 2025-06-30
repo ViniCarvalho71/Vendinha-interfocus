@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using VendinhaAPI.Interfaces;
 
 namespace VendinhaAPI.Models;
 
-public class Divida
+public class Divida : IEntidade
 {
     public long Id { get; set; }
     [Required]

@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using VendinhaAPI.Interfaces;
 
 
 namespace VendinhaAPI.Models;
 
-public class Cliente
+public class Cliente : IEntidade
 {
     public long Id { get; set; }
     [Required]
@@ -32,4 +33,5 @@ public class Cliente
         if (DataNascimento > aniversario) idade--;
         return idade;
     } }
+    
 }

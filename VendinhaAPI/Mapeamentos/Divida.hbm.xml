@@ -14,7 +14,7 @@
         <property name="Valor"	type="decimal" not-null="true" />
         <property name="Situacao"	type="boolean"/>
         <property name="DataPagamento" type="date" />
-        <property name="DataCadastro"	type="DateTime" not-null="true" />
+        <property name="DataCriacao"	type="DateTime" not-null="true" />
         <property name="Descricao"	type="string" length="5000"/>
 
         <many-to-one name="Cliente"
