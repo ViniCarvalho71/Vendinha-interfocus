@@ -19,7 +19,7 @@ public class Cliente : IEntidade
     [Required]
     public DateTime? DataNascimento { get; set; }
     
-    public List<Divida> Dividas { get; set; }
+    public IList<Divida> Dividas { get; set; }
 
     public int Idade { get
     {
