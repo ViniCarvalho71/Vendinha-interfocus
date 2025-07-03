@@ -17,7 +17,7 @@
         <property name="Cpf"	type="string" length="14" not-null="true" />
 
         <bag name="Dividas" lazy="false" generic="true"
-             cascade="all-delete-orphan">
+             cascade="none">
             <key column="clienteid" />
             <one-to-many class="Divida"/>
         </bag>

@@ -16,9 +16,10 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<ClienteService>();
+builder.Services.AddTransient<DividaService>();
 
 var connectionString = builder.Configuration
-    .GetConnectionString("Default");
+    .GetConnectionString("Default");    
 
 builder.Services.AddSingleton(c =>
 {
