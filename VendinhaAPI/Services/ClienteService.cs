@@ -194,9 +194,10 @@ public class ClienteService
             repository.Commit();
             return existente;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             repository.Rollback();
+            Console.WriteLine($"Erro ao deletar dívida: {ex.Message}");
             return null;
         }
     }

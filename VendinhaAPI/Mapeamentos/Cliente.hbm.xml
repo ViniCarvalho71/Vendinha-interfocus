@@ -16,7 +16,7 @@
         <property name="DataNascimento" type="date"	not-null="true" />
         <property name="Cpf"	type="string" length="14" not-null="true" />
 
-        <bag name="Dividas" lazy="false" generic="true"
+        <bag name="Dividas" lazy="false" generic="true" inverse ="true"
              cascade="none">
             <key column="clienteid" />
             <one-to-many class="Divida"/>
