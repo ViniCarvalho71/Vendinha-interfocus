@@ -21,9 +21,13 @@ export function Footer() {
 }
 
 export default function Layout() {
-    return <>
-        <header><Menu /></header>
-            <main><Outlet /></main>
+    return (
+        <div id="container">          
+            <div id="conteudo">
+                <header><Menu /></header>
+                <main><Outlet /></main>
+            </div>
             <Footer />
-    </>
+        </div>
+    );   
 }

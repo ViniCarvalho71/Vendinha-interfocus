@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import './App.css'
 import {
   BrowserRouter,
   Routes,
@@ -6,17 +7,18 @@ import {
 } from "react-router-dom";
 import Layout from "./components/Layout";
 import ClientePage from './pages/Clientes';
-
-import './App.css'
+import DividaPage from './pages/Divida';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<ClientePage />} />
+          <Route path="dividas">
+              <Route index element={<DividaPage />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
