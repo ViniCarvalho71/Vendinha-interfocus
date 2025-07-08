@@ -119,21 +119,31 @@ public class ClienteService
 
 
     }
+
+    public List<Cliente> Consultar()
+    {
+        var resultado = repository.
+        Consultar<Cliente>().
+        OrderByDescending(c => c.Nome).
+        ToList();
+
+        return resultado;
+    }
     public List<Cliente> Consultar(int page)
     {
-        
-        var resultado2 = repository
+
+        var resultado = repository
             .Consultar<Cliente>()
             .Skip(10 * (page - 1))
             .Take(10)
             .ToList();
-        return resultado2;
+        return resultado;
     }
     
     public List<Cliente> Consultar(string pesquisa, int page)
     {
         
-        var resultado2 = repository
+        var resultado = repository
             .Consultar<Cliente>()
             .Where(item => item.Nome.Contains(pesquisa) || 
                            item.Cpf.Contains(pesquisa) || 
@@ -142,7 +152,7 @@ public class ClienteService
             .Skip(10 * (page - 1))
             .Take(10)
             .ToList();
-        return resultado2;
+        return resultado;
     }
 
     public Cliente ConsultarPorCodigo(long codigo)

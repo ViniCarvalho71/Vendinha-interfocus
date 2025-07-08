@@ -26,10 +26,17 @@ public class ClienteController : ControllerBase
         return UnprocessableEntity(erros);
     }
 
+
+
     [HttpGet]
-    public IActionResult Get(string pesquisa, int page)
+    public IActionResult Get(string pesquisa, int page = 0)
     {
-        return string.IsNullOrEmpty(pesquisa) ? 
+        if (page == 0)
+        {
+            return Ok(servico.Consultar());
+        }
+        
+        return string.IsNullOrEmpty(pesquisa) ?
             Ok(servico.Consultar(page)) :
             Ok(servico.Consultar(pesquisa, page));
     }
