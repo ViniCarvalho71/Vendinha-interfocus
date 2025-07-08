@@ -76,6 +76,7 @@ table {
     border-collapse: collapse;
     overflow: hidden;                      
     background-color: #ffffff;
+    font-size: 20px;
     width: 100%;
 }
 
@@ -102,15 +103,16 @@ input {
 .actions{
     display: flex;
     justify-content: space-between;
-    width: 100px;
+    width: 200px;
 }
 
 .actions button {
     border: none;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 5px;
     color: white; 
+    font-size: 20px;
 }
 
 
@@ -126,8 +128,28 @@ input {
     background-color: rgb(255, 109, 109);
 }
 
+.divida{
+    background-color: rgb(136, 167, 82);
+}
+
+.visualizar:hover {
+  background-color: #369be9;
+}
+
+.editar:hover {
+  background-color: #ceaf32;
+}
+
+.excluir:hover {
+  background-color: #fd4f4f;
+}
+
+.divida:hover{
+    background-color: rgb(91, 117, 44);
+}
+
 .tabela-container{
-    width: 800px;
+    width: 1200px;
     border-radius: 10px;  
 }
 
@@ -161,7 +183,7 @@ input {
 
 .paginacao button{
     width: 90px;
-    height: 25px;
+    height: 35px;
     border: none;
     background-color: #3dc4fa;
     border-radius: 2px;
@@ -177,13 +199,14 @@ input {
 
 
 .tabela-header input{
-    height: 25px;
+    height: 40px;
     width: 200px;
     margin: 0 0 0 10px;
     padding: 2px 0 2px 10px;
     border-radius: 10px;
     border:none;
     background-color: rgb(238, 237, 237);
+    font-size: 18px;
 }
 
 .tabela-header input:focus{
@@ -195,7 +218,7 @@ input {
 
 
 .tabela-header button{
-    height: 30px;
+    height: 40px;
     margin: 0 10px 0 0 ;
     width: 120px;
     background-color: rgb(135, 253, 141);
@@ -212,17 +235,6 @@ input {
     color: #ffffff;
 }
 
-.visualizar:hover {
-  background-color: #369be9;
-}
-
-.editar:hover {
-  background-color: #ceaf32;
-}
-
-.excluir:hover {
-  background-color: #fd4f4f;
-}
 
 .modal {
     position: fixed;
@@ -317,6 +329,7 @@ button[type="reset"]:hover{
     border-radius: 10px;
 }
 
+
 .modal-deletar p{
     margin-top: 100px;
 }
@@ -327,4 +340,14 @@ button[type="reset"]:hover{
     justify-content: space-between;
     margin: 0 10px 15px 10px;
     
+}
+
+.modal-view{
+    display: flex;
+    flex-direction: column;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    height: 700px;
+    width: 700px;
 }

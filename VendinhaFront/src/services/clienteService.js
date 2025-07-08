@@ -36,15 +36,10 @@ export function listarClientes(busca,page) {
 
 export async function excluirCliente(id) {
     const resultado = await fetch(`${URL_API}/api/cliente/${id}`, {
-        method: "DELETE" ,
-        headers: {
-            "Content-type": "application/json"
-        }
+        method: "DELETE" 
     });
-    var dados = await resultado.json();
     return {
-        status: resultado.status,
-        data: dados
+        status: resultado.status
     }
 }
 
