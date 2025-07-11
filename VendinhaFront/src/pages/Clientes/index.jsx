@@ -1,4 +1,4 @@
-import { FaPlus,FaTrashAlt, FaEye, FaEdit, FaDollarSign,FaSearch } from "react-icons/fa";
+import { FaPlus,FaTrashAlt, FaEye, FaEdit, FaDollarSign} from "react-icons/fa";
 import { listarClientes, salvarCliente, excluirCliente} from "../../services/clienteService";
 import Modal from "../../components/Modal";
 import { useState, useEffect} from "react";
@@ -27,11 +27,13 @@ export function LinhaCliente({cliente, excluir, edit, view, dividas}){
 
 export function LinhaDivida({divida}){
     return(
-        <>
-        <p>Dívida: {divida.id}</p>
-        <p>Valor: {divida.valor}</p>
-        <p>Data de Pagamento: {new Date(divida.dataPagamento).toLocaleString().slice(0,10)}</p>
-        </>
+            <div className="divida">
+                <div className="dados">
+                    <p>ID: {divida.id}</p>
+                    <p>Valor: R$ {divida.valor}</p>
+                    <p>Data de Pagamento: {new Date(divida.dataPagamento).toLocaleString().slice(0,10)}</p>
+                </div>
+            </div>         
     );
 
     
@@ -46,6 +48,7 @@ export default function ClientePage(){
     const [open, setOpen] = useState(false);
     const [openDeletar, setOpenDeletar] = useState(false);
     const [openView, setOpenView] = useState(false);
+    const [filtro, setFiltro] = useState(null);
 
     const fetchData = async () => {
         const resultado = await listarClientes(search, page);
@@ -192,10 +195,37 @@ export default function ClientePage(){
                     <p>Data de Nascimento: </p>
                     <p>Idade: {selected?.idade}</p>
                 </div>
+                <h1>Dívidas:</h1>
+                <div className="checkbox">
+                <div className="checkbox-item">
+                    <label >
+                        Somente pagas:
+                    </label>
+                    <input
+                        type="checkbox"
+                        checked={filtro === 'pagas'}
+                        onChange={() =>
+                            setFiltro(filtro === 'pagas' ? null : 'pagas')
+                        }
+                        />
+                    </div>
+                    <div className="checkbox-item">
+                    <label>
+                        Somente em aberto: 
+                    </label>
+                    <input
+                        type="checkbox"
+                        checked={filtro === 'aberto'}
+                        onChange={() =>
+                            setFiltro(filtro === 'aberto' ? null : 'aberto')
+                        }
+                        />
+                    </div>
+                </div>
                 <div className="dividas">
                     {
                         selected?.dividas.map(divida => 
-                            <LinhaDivida key={divida.id} divida={divida}></LinhaDivida>
+                           <LinhaDivida key={divida.id} divida={divida}></LinhaDivida>
                         )
                     }
                 </div>
