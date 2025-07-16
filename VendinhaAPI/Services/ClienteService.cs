@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
+using VendinhaAPI.Dtos;
 using VendinhaAPI.Models;
 using VendinhaAPI.Repository;
 
@@ -120,27 +121,46 @@ public class ClienteService
 
     }
 
-    public List<Cliente> Consultar()
+    public RetornoDto<Cliente> Consultar()
     {
         var resultado = repository.
         Consultar<Cliente>().
         OrderByDescending(c => c.Nome).
         ToList();
 
-        return resultado;
+        var retorno = new RetornoDto<Cliente>()
+        {
+            dados = resultado,
+            quantidadeDeRegistros = repository
+                .Consultar<Cliente>().Count()
+        };
+        
+        return retorno;
     }
-    public List<Cliente> Consultar(int page)
+    public RetornoDto<Cliente> Consultar(int page)
     {
 
         var resultado = repository
             .Consultar<Cliente>()
+            .OrderByDescending(item => item.Dividas
+                .Where(d => d.Situacao == false)
+                .Sum(d => (decimal?)d.Valor) ?? 0)
             .Skip(10 * (page - 1))
             .Take(10)
             .ToList();
-        return resultado;
+
+
+        var retorno = new RetornoDto<Cliente>()
+        {
+            dados = resultado,
+            quantidadeDeRegistros = repository
+                .Consultar<Cliente>().Count()
+        };
+        
+        return retorno;
     }
     
-    public List<Cliente> Consultar(string pesquisa, int page)
+    public RetornoDto<Cliente> Consultar(string pesquisa, int page)
     {
         
         var resultado = repository
@@ -148,11 +168,22 @@ public class ClienteService
             .Where(item => item.Nome.Contains(pesquisa) || 
                            item.Cpf.Contains(pesquisa) || 
                            item.Email.Contains(pesquisa))
-            .OrderByDescending(item => item.Dividas.Sum(d => d.Valor))
+            .OrderByDescending(item => item.Dividas
+                .Where(d => d.Situacao == false)
+                .Sum(d => (decimal?)d.Valor) ?? 0)
             .Skip(10 * (page - 1))
             .Take(10)
             .ToList();
-        return resultado;
+
+        
+        var retorno = new RetornoDto<Cliente>()
+        {
+            dados = resultado,
+            quantidadeDeRegistros = repository
+                .Consultar<Cliente>().Count()
+        };
+        
+        return retorno;
     }
 
     public Cliente ConsultarPorCodigo(long codigo)

@@ -44,10 +44,10 @@ public class ClienteController : ControllerBase
     [HttpPut]
     public IActionResult Put([FromBody] Cliente cliente)
     {
-        var resultado = servico.Editar(cliente,out _);
+        var resultado = servico.Editar(cliente,out List<MensagemErro> erros);
         if (resultado == null)
         {
-            return NotFound();
+            return UnprocessableEntity(erros);
         }
         return Ok(resultado);
     }

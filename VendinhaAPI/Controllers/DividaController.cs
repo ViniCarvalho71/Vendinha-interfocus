@@ -26,7 +26,7 @@ public class DividaController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult Get(string pesquisa, int page)
+    public IActionResult Get(string pesquisa, int page = 0)
     {
         return string.IsNullOrEmpty(pesquisa) ? 
             Ok(servico.Consultar(page)) :
@@ -36,10 +36,10 @@ public class DividaController : ControllerBase
     [HttpPut]
     public IActionResult Put([FromBody] Divida divida)
     {
-        var resultado = servico.Editar(divida,out _);
+        var resultado = servico.Editar(divida,out List<MensagemErro> erros);
         if (resultado == null)
         {
-            return NotFound();
+            return UnprocessableEntity(erros);;
         }
         return Ok(resultado);
     }

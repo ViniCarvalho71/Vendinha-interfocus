@@ -43,10 +43,11 @@ export async function excluirCliente(id) {
     }
 }
 
-export async function getAlunoById(id) {
-    const resultado = await fetch(`${URL_API}/api/cliente/${id}`, {
+export async function todosOsClientes(){
+    const resultado = await fetch(`${URL_API}/api/cliente`, {
         method: "GET"
     });
+
     var dados = await resultado.json();
     return {
         status: resultado.status,

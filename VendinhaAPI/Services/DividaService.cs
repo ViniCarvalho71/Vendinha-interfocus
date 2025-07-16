@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using VendinhaAPI.Dtos;
 using VendinhaAPI.Models;
 using VendinhaAPI.Repository;
 
@@ -38,7 +39,7 @@ public class DividaService
                 erro.ErrorMessage);
         }
         
-        if (divida.Cliente == null || divida.Cliente.Id <= 0)
+        if (divida.Cliente.Id <= 0)
         {
             mensagens.Add(new MensagemErro("Cliente", "Cliente inválido ou não informado."));
             return false;
@@ -46,7 +47,9 @@ public class DividaService
         
         
         var totalDividas = repository.Consultar<Divida>()
-            .Where(d => d.Cliente.Id == divida.Cliente.Id)
+            .Where(d => d.Cliente.Id == divida.Cliente.Id 
+                        && divida.Id != d.Id
+                        && d.Situacao == false)
             .Select(d => (decimal?)d.Valor)
             .Sum() ?? 0;
         
@@ -66,6 +69,7 @@ public class DividaService
         {
             try
             {
+                divida.Situacao = false;
                 using var transacao = repository.IniciarTransacao();
                 repository.Incluir(divida);
                 repository.Commit();
@@ -82,31 +86,48 @@ public class DividaService
         return false;
     }
     
-    public List<Divida> Consultar(int page)
+    public RetornoDto<Divida> Consultar(int page)
     {
         
-        var resultado2 = repository
+        var resultado = repository
             .Consultar<Divida>()
+            .OrderByDescending(d =>  d.Valor)
             .Skip(10 * (page - 1))
             .Take(10)
             .ToList();
         
-        return resultado2;
+        var retorno = new RetornoDto<Divida>()
+        {
+            dados = resultado,
+            quantidadeDeRegistros = repository
+                .Consultar<Divida>().Count()
+        };
+        
+        return retorno;
     }
     
-    public List<Divida> Consultar(string pesquisa, int page)
+    public RetornoDto<Divida> Consultar(string pesquisa, int page)
     {
         
-        var resultado2 = repository
+        var resultado = repository
             .Consultar<Divida>()
             .Where(item => 
                            item.Valor.ToString() == pesquisa ||
                            item.Cliente.Nome.Contains(pesquisa)
                            )
+            .OrderByDescending(d => d.Valor)
             .Skip(10 * (page - 1))
             .Take(10)
             .ToList();
-        return resultado2;
+        
+        var retorno = new RetornoDto<Divida>()
+        {
+            dados = resultado,
+            quantidadeDeRegistros = repository
+                .Consultar<Divida>().Count()
+        };
+        
+        return retorno;
     }
 
     public Divida ConsultarPorCodigo(long codigo)
@@ -147,7 +168,7 @@ public class DividaService
         return null;
 
     }
-
+    
     public Divida Deletar(long codigo)
     {
         var existente = ConsultarPorCodigo(codigo);
@@ -166,5 +187,6 @@ public class DividaService
             return null;
         }
     }
+    
 
 }

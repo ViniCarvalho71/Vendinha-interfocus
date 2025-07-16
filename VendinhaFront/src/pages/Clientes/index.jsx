@@ -1,43 +1,11 @@
-import { FaPlus,FaTrashAlt, FaEye, FaEdit, FaDollarSign} from "react-icons/fa";
+import { FaPlus} from "react-icons/fa";
 import { listarClientes, salvarCliente, excluirCliente} from "../../services/clienteService";
+import { salvarDivida} from "../../services/dividaService";
 import Modal from "../../components/Modal";
+import  LinhaCliente  from "./components/linhaCliente"
+import  LinhaDivida  from "./components/linhaDivida"
 import { useState, useEffect} from "react";
 
-
-
-export function LinhaCliente({cliente, excluir, edit, view, dividas}){
-    const data = new Date(cliente.dataNascimento);
-    return(
-        <tr>
-                    <td>{cliente.nome}</td>
-                    <td>{cliente.cpf}</td>
-                    <td>{data.toLocaleString().slice(0,10)}</td>
-                    <td>{cliente.dividas.length === 0 ? "Não Deve" : "Deve"}</td>
-                    <td className="actions">
-                        <button className="visualizar" onClick={view}><FaEye className="action-icon" /></button>
-                        <button className="editar"  onClick={edit}><FaEdit className="action-icon" /></button>
-                        <button className="excluir" onClick={excluir}
-                        ><FaTrashAlt className="action-icon" /></button>
-                        <button className="divida" onClick={dividas}
-                        ><FaDollarSign className="action-icon" /></button>
-                    </td>
-                </tr>
-    );
-}
-
-export function LinhaDivida({divida}){
-    return(
-            <div className="divida">
-                <div className="dados">
-                    <p>ID: {divida.id}</p>
-                    <p>Valor: R$ {divida.valor}</p>
-                    <p>Data de Pagamento: {new Date(divida.dataPagamento).toLocaleString().slice(0,10)}</p>
-                </div>
-            </div>         
-    );
-
-    
-}
 
 export default function ClientePage(){
 
@@ -48,12 +16,15 @@ export default function ClientePage(){
     const [open, setOpen] = useState(false);
     const [openDeletar, setOpenDeletar] = useState(false);
     const [openView, setOpenView] = useState(false);
+    const [openDivida, setOpenDivida] = useState(false);
     const [filtro, setFiltro] = useState(null);
+    const [registros, setRegistros] = useState(0);
 
     const fetchData = async () => {
         const resultado = await listarClientes(search, page);
         if (resultado.status == 200) {
-            setClientes(resultado.data);
+            setClientes(resultado.data.dados);
+            setRegistros(resultado.data.quantidadeDeRegistros);
         }
     }
 
@@ -67,11 +38,8 @@ export default function ClientePage(){
             nome: formData.get("nome"),
             cpf: formData.get("cpf"),
             email: formData.get("email"),
-            dataNascimento: formData.get("data_nascimento"),
-            descricao: formData.get("descricao")
+            dataNascimento: formData.get("data_nascimento")
         };
-        // falsey values: 0, null, undefined, "", false
-        // not falsey values = TRUE
         if (selected?.id) {
             cliente.id = selected.id;
         }
@@ -81,15 +49,35 @@ export default function ClientePage(){
             fetchData();
         }
     }
+
+     const submitFormDivida = async (event) => {
+                event.preventDefault();
+        
+                const form = event.target;
+                const formData = new FormData(form);
+        
+                const divida = {
+                    valor: formData.get("valor"),
+                    dataPagamento: formData.get("data_nascimento"),
+                    descricao: formData.get("descricao"),
+                    cliente: { id: formData.get("cliente") }
+                };
+                const resultado = await salvarDivida(divida);
+                if (resultado.status == 200) {
+                    setOpenDivida(false);
+                    fetchData();
+                }
+            }
+    
     useEffect(() => {
         var timeout = setTimeout(() => {
             fetchData();
-        }, 500);
+        }, 200);
 
         return () => {
             clearTimeout(timeout);
         }
-    }, [search, openDeletar]);
+    }, [search, openDeletar, page]);
 
     const abrirModalDelete = (cliente) => {
         setSelected(cliente);
@@ -102,8 +90,13 @@ export default function ClientePage(){
     }
 
     const abrirModalView = (cliente) => {
-        setSelected(cliente)
-        setOpenView(true)
+        setSelected(cliente);
+        setOpenView(true);
+    }
+
+    const abrirModalDivida = (cliente) => {
+        setSelected(cliente);
+        setOpenDivida(true);
     }
     const excluirClientePorId = async () => {
         const resultado = await excluirCliente(selected?.id);
@@ -112,6 +105,13 @@ export default function ClientePage(){
             setOpenDeletar(false);
         }
     }
+
+    const totalGeral = clientes.reduce((total, cliente) => {
+        const totalCliente = cliente.dividas
+        .filter(divida => divida.situacao === false)
+        .reduce((soma, divida) => soma + divida.valor, 0);
+            return total + totalCliente;
+    }, 0);
 
 
     return (
@@ -135,6 +135,7 @@ export default function ClientePage(){
                     <th>Cpf</th>
                     <th>Data Nascimento</th>
                     <th>Situação</th>
+                    <th>Dividas</th>
                     <th>Ações</th>
                 </tr>
             </thead>
@@ -146,16 +147,21 @@ export default function ClientePage(){
                             excluir={() => abrirModalDelete(cliente) }
                             edit = {()=> abrirModalEdit(cliente)}
                             view = {()=> abrirModalView(cliente)}
+                            dividas = {()=> abrirModalDivida(cliente)}
                             ></LinhaCliente>
                     )
                 }
+                <tr><td>Divida total: R$ {totalGeral}</td></tr>
             </tbody>
         </table>
         <div className="tabela-footer">
             <div className="paginacao">
-                <button>Anter.</button>
-                <p>1 de 3</p>
-                <button>Prox.</button>
+                <button onClick={ () => setPage(page - 1)}
+                    disabled={page === 1}>Anter.</button>
+                <p>{page} de { Math.ceil(registros / 10) }</p>
+                <button onClick={ () => setPage(page + 1)} 
+                    disabled={page === Math.ceil(registros / 10)}>Prox.
+                </button>
             </div>
         </div>
         </div>
@@ -178,7 +184,7 @@ export default function ClientePage(){
 
         <Modal open={openDeletar}>
             <div className="modal-deletar">
-                <p>Deseja excluir o cliente {selected?.nome}?</p>
+                <h2>Deseja excluir o cliente {selected?.nome}?</h2>
                 <div className="row">
                             <button type="reset" onClick={() => setOpenDeletar(false)}>Cancelar</button>
                             <button type="submit" onClick={() => excluirClientePorId()}>Excluir</button>
@@ -195,33 +201,7 @@ export default function ClientePage(){
                     <p>Data de Nascimento: </p>
                     <p>Idade: {selected?.idade}</p>
                 </div>
-                <h1>Dívidas:</h1>
-                <div className="checkbox">
-                <div className="checkbox-item">
-                    <label >
-                        Somente pagas:
-                    </label>
-                    <input
-                        type="checkbox"
-                        checked={filtro === 'pagas'}
-                        onChange={() =>
-                            setFiltro(filtro === 'pagas' ? null : 'pagas')
-                        }
-                        />
-                    </div>
-                    <div className="checkbox-item">
-                    <label>
-                        Somente em aberto: 
-                    </label>
-                    <input
-                        type="checkbox"
-                        checked={filtro === 'aberto'}
-                        onChange={() =>
-                            setFiltro(filtro === 'aberto' ? null : 'aberto')
-                        }
-                        />
-                    </div>
-                </div>
+                <h2>Dívidas:</h2>
                 <div className="dividas">
                     {
                         selected?.dividas.map(divida => 
@@ -233,6 +213,31 @@ export default function ClientePage(){
                     <button type="reset" onClick={() => setOpenView(false)}>Fechar</button>
                 </div>
             </div>
+        </Modal>
+
+        <Modal open={openDivida}>
+            <form method="post" onSubmit={submitFormDivida}>
+                <div className="titulo">
+                    <h2>Cadastrar nova dívida para o cliente:
+                    </h2>
+                    <h2>
+                        {selected?.nome.toUpperCase()}
+                    </h2>
+                </div>
+                <input type="hidden" name="cliente" value={selected?.id} />
+                <label>Valor: </label>
+                <input type="text" defaultValue={selected?.valor} name="valor"  placeholder="R$ 00,0"/>
+                <label>Data de Pagamento:</label>
+                <input type="date" defaultValue={selected?.dataPagamento
+        ? new Date(selected.dataPagamento).toISOString().slice(0, 10)
+        : ''} name="data_nascimento"  />
+                <label>Descrição: </label>
+                <textarea name="descricao" id="" defaultValue={selected?.descricao} ></textarea>
+                <div className="row">
+                    <button type="reset" onClick={() => setOpenDivida(false)}>Cancelar</button>
+                    <button type="submit" >Enviar</button>
+                </div>
+            </form>
         </Modal>
 
         
