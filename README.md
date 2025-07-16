@@ -72,7 +72,7 @@ dotnet build
 dotnet run
 ```
 
-4. A API estará disponível em `https://localhost:5001` (ou outra porta informada no terminal).
+4. A API estará disponível em `https://localhost:5230`.
 
 5. Para acessar a documentação Swagger:
 
@@ -105,16 +105,11 @@ npm run dev
 4. Abra no navegador:
 
 ```
-http://localhost:3000
+http://localhost:5137
 ```
 
 ---
 
-## CORS
-
-O backend está configurado para aceitar requisições de qualquer origem, facilitando o desenvolvimento local com frontend separado.
-
----
 
 ## Estrutura do Projeto
 
