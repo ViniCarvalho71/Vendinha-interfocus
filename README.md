@@ -78,7 +78,7 @@ dotnet run
 5. Para acessar a documentação Swagger:
 
 ```
-https://localhost:5001/swagger
+https://localhost:5230/swagger
 ```
 
 ---
