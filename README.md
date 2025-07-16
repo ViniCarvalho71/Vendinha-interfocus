@@ -57,6 +57,7 @@ Sistema web para gerenciamento de dívidas e clientes, com backend em ASP.NET Co
 ```bash
 git clone https://github.com/ViniCarvalho71/Vendinha-interfocus.git
 cd Vendinha-interfocus
+cd VendinhaAPI
 ```
 
 2. Restaure pacotes e compile o projeto:
@@ -84,10 +85,10 @@ https://localhost:5001/swagger
 
 ## Rodando o Frontend
 
-1. Acesse a pasta do frontend (supondo que seja `vendinhafront` dentro do projeto):
+1. Acesse a pasta do frontend:
 
 ```bash
-cd vendinhafront
+cd VendinhaFront
 ```
 
 2. Instale dependências:
