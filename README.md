@@ -110,21 +110,6 @@ http://localhost:5137
 
 ---
 
-
-## Estrutura do Projeto
-
-```
-/Vendinha-interfocus
-|-- /vendinhafront    # Frontend React + Vite
-|-- /Mapeamentos      # Arquivos NHibernate .hbm.xml
-|-- hibernate.cfg.xml # Configuração NHibernate
-|-- Program.cs        # Configuração do ASP.NET Core
-|-- appsettings.json  # Configuração de conexão e logging
-|-- Vendinha.csproj   # Projeto backend
-```
-
----
-
 ## Contato
 
 Para dúvidas ou contribuições, abra uma issue ou entre em contato com o autor.
