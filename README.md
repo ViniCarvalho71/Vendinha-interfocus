@@ -73,7 +73,7 @@ npm run dev
 
 ### 📥 Listar Clientes
 - **Método:** `GET`
-- **Rota:** `/api/cliente`
+- **Rota:** `/api/cliente/page={int}&pesquisa={string}`
 - **Descrição:** Retorna todos os clientes cadastrados.
 
 ### ✏️ Atualizar Cliente
@@ -119,7 +119,7 @@ npm run dev
 
 ### 📥 Listar Dívidas
 - **Método:** `GET`
-- **Rota:** `/api/divida`
+- **Rota:** `/api/divida/page={int}&pesquisa={string}`
 - **Descrição:** Retorna todas as dívidas registradas.
 
 ### ✏️ Atualizar Dívida
