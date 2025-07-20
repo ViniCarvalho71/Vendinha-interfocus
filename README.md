@@ -27,18 +27,22 @@ Certifique-se de que o PostgreSQL esteja rodando e atualizado com os dados do `a
 }
 
 3. Restaurar Dependências
-
+   
+```bash
 dotnet restore
-
+```
 5. Rodar o Backend
-
+   
+```bash
 dotnet run
-
-6. Rodar o Frontend 
-
+```
+6. Rodar o Frontend
+   
+```bash
 cd VendinhaFront
 npm install
 npm run dev
+```
 
 # Bibliotecas extras utilizadas
 
