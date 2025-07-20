@@ -62,10 +62,10 @@ npm run dev
 - **Body esperado (JSON):**
 ```json
 {
-  "nome": "João Silva",
-  "cpf": "123.456.789-00",
-  "email": "joao@email.com",
-  "dataNascimento": "1990-01-01"
+  "nome": "string",
+  "cpf": "string",
+  "email": "user@example.com",
+  "dataNascimento": "2025-07-20T01:06:33.634Z",
 }
 ```
 
@@ -81,11 +81,10 @@ npm run dev
 - **Body esperado (JSON):**
 ```json
 {
-  "id": 1,
-  "nome": "João Silva Atualizado",
-  "cpf": "123.456.789-00",
-  "email": "joao.novo@email.com",
-  "dataNascimento": "1990-01-01"
+  "nome": "string 2",
+  "cpf": "string",
+  "email": "user@example.com",
+  "dataNascimento": "2025-07-20T01:06:33.634Z",
 }
 ```
 
@@ -106,9 +105,10 @@ npm run dev
 - **Body esperado (JSON):**
 ```json
 {
-  "descricao": "Compra no cartão",
-  "valor": 150.00,
-  "dataPagamento": "2025-08-01",
+  "valor": 0,
+  "dataPagamento": "2025-07-20T01:07:37.287Z",
+  "descricao": "string",
+  "situacao": false,
   "cliente": {
     "id": 1
   }
@@ -127,14 +127,13 @@ npm run dev
 - **Body esperado (JSON):**
 ```json
 {
-  "id": 2,
-  "descricao": "Compra no mercado",
-  "valor": 180.00,
-  "dataPagamento": "2025-08-10",
+  "valor": 0,
+  "dataPagamento": "2025-07-20T01:07:37.287Z",
+  "descricao": "string",
+  "situacao": true,
   "cliente": {
     "id": 1
-  },
-  "situacao": false
+  }
 }
 ```
 
