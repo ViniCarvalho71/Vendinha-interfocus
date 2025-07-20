@@ -47,7 +47,9 @@ npm run dev
 # Bibliotecas extras utilizadas
 
 - react-icons
+  * Motivo: É uma bibiblioteca eu auxilia da utilização de ícones das mais diversas fontes (Font Awesome, Heroicons, etc).
 - react-router-dom
+  * Motivo:  É a biblioteca oficial de roteamento para React no navegador, e oferece uma maneira eficiente de criar SPAs (Single Page Applications).
 
 
 📘 Documentação da API
