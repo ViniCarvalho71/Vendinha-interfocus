@@ -1,11 +1,12 @@
 import { FaTrashAlt, FaEye, FaEdit, FaCheck } from "react-icons/fa";
+import { realMask } from "../../../utils/masks";
 
 export default function LinhaDivida({divida, excluir, edit, view, pagar}){
     const data = new Date(divida.dataPagamento);
     return(
         <tr>
                     <td>{divida.cliente.nome}</td>
-                    <td>{divida.valor}</td>
+                    <td>{realMask(divida.valor)}</td>
                     <td>{data.toLocaleString().slice(0,10)}</td>
                     <td>{divida.situacao ? "Paga" : "Aberta"}</td>
                     <td className="actions">

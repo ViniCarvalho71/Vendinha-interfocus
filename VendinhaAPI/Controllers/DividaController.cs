@@ -53,4 +53,11 @@ public class DividaController : ControllerBase
         }
         return Ok(resultado);
     }
+
+    [HttpGet("totalDividas")]
+    public IActionResult TotalDividas()
+    {
+        var resultado = servico.TotalDividas();
+        return Ok(resultado);
+    }
 }

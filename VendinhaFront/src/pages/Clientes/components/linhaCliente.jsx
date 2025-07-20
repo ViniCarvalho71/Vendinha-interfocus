@@ -1,4 +1,5 @@
 import { FaTrashAlt, FaEye, FaEdit, FaRegCalendarPlus } from "react-icons/fa";
+import { realMask } from "../../../utils/masks";
 
 export default function LinhaCliente({cliente, excluir, edit, view, dividas}){
     const data = new Date(cliente.dataNascimento);
@@ -12,7 +13,7 @@ export default function LinhaCliente({cliente, excluir, edit, view, dividas}){
                     <td>{cliente.cpf}</td>
                     <td>{data.toLocaleString().slice(0,10)}</td>
                     <td>{cliente.dividas.some(divida => divida.situacao === false) ? "Deve" : "Não Deve"}</td>
-                    <td>R$ {totalDividas}</td>
+                    <td>{realMask(totalDividas)}</td>
                     <td className="actions">
                         <button className="visualizar" onClick={view}><FaEye className="action-icon" /></button>
                         <button className="editar"  onClick={edit}><FaEdit className="action-icon" /></button>

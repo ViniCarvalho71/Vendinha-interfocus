@@ -1,24 +1,20 @@
 import { Link, Outlet } from "react-router-dom";
+import { FaUser,FaDollarSign} from "react-icons/fa";
 
 export function Menu() {
     return (
         <nav>
             <ul>
                 <li>
-                    <Link to="/">Clientes</Link>
+                    <Link to="/"><FaUser/> Clientes</Link>
                 </li>
                 <li>
-                    <Link to="/dividas">Dividas</Link>
+                    <Link to="/dividas"><FaDollarSign/> Dívida</Link>
                 </li>
             </ul>
         </nav>)
 }
 
-export function Footer() {
-    return <footer>
-        <p>{new Date().getFullYear()} - Todos os direitos reservados &copy;</p>
-    </footer>
-}
 
 export default function Layout() {
     return (
@@ -27,7 +23,6 @@ export default function Layout() {
                 <header><Menu /></header>
                 <main><Outlet /></main>
             </div>
-            <Footer />
         </div>
     );   
 }

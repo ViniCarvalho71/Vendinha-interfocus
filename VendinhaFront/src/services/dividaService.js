@@ -43,6 +43,15 @@ export async function excluirDivida(id) {
     }
 }
 
+export async function totalDividas(){
+    const resultado = await fetch(`${URL_API}/api/divida/totalDividas`, {
+        method: "GET" 
+    });
+    return {
+        data: await resultado.json(),
+        status: resultado.status
+    }
+}
 
 
 

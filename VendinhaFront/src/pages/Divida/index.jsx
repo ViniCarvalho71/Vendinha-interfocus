@@ -1,7 +1,8 @@
-import { FaPlus,FaTrashAlt, FaEye, FaEdit, FaDollarSign } from "react-icons/fa";
-import { useState, useEffect} from "react";
-import { listarDividas, salvarDivida, excluirDivida} from "../../services/dividaService";
+import { FaPlus, FaExclamation } from "react-icons/fa";
+import { useState, useEffect, useReducer} from "react";
+import { listarDividas, salvarDivida, excluirDivida, totalDividas} from "../../services/dividaService";
 import { todosOsClientes } from "../../services/clienteService";
+import { realMask } from "../../utils/masks";
 import LinhaDivida from "./components/linhaDivida";
 import Modal from "../../components/Modal";
 
@@ -16,6 +17,18 @@ export default function DividaPage(){
     const [openPagar, setOpenPagar] = useState(false);
     const [clientes, setClientes] = useState([]);
     const [registros, setRegistros] = useState(0);
+    const [valorDividas, setValorDividas] = useState(0);
+    const [erros, setErros] = useState([]);
+    const [valor, setValor] = useReducer(
+        (oldValue, newValue) => {
+
+            if (newValue) {
+                
+                return realMask(newValue);
+            }
+
+            return newValue?.toLowerCase();
+        }, "R$ 00,00");
 
     const fetchData = async () => {
         const resultado = await listarDividas(search, page);
@@ -32,9 +45,17 @@ export default function DividaPage(){
         }
     }
 
+    const somaDividas = async () => {
+        const resultado = await totalDividas();
+        if (resultado.status == 200){
+            setValorDividas(resultado.data);
+        }
+    }
+
     const abrirModalEdit = (divida) => {
-    setSelected(divida);
-    setOpen(true);
+        setSelected(divida);
+        setValor(divida.valor);
+        setOpen(true);
     }
 
     const abrirModalView = (divida) => {
@@ -72,9 +93,10 @@ export default function DividaPage(){
     
             const form = event.target;
             const formData = new FormData(form);
-    
             const divida = {
-                valor: formData.get("valor"),
+                valor: formData.get("valor").replace(/\s|R\$/g, '')    
+                .replace(/\./g, '')         
+                .replace(',', '.'),
                 dataPagamento: formData.get("data_nascimento"),
                 descricao: formData.get("descricao"),
                 cliente: { id: formData.get("cliente") }
@@ -86,18 +108,21 @@ export default function DividaPage(){
             if (resultado.status == 200) {
                 setOpen(false);
                 fetchData();
+            } else if (resultado.status == 422){
+                    setErros(resultado.data);
             }
         }
 
         useEffect(() => {
             var timeout = setTimeout(() => {
                 fetchData();
+                somaDividas();
             }, 500);
 
         return () => {
             clearTimeout(timeout);
         }
-        }, [search, openDeletar, page]);
+        }, [search, openDeletar, page, valorDividas]);
 
         useEffect(() => {
             var timeout = setTimeout(() => {
@@ -109,19 +134,27 @@ export default function DividaPage(){
         }
         }, [open])
 
+        useEffect(() => {
+            setErros([]);
+        }, [open])
+        
     return(
         <>
         <div className="tabela-container">
                 <div className="tabela-header">
+                <h1>Tabela de Dividas</h1>
+                <div className="funcionalidades">
                 <input type="text" placeholder="Pesquisar"
                         onChange={(e) =>
                             setSearch(e.target.value)
                         }/>
+
                 <button onClick={() => {setOpen(true);
                 setSelected(null); 
                 }}>
                     <FaPlus/>
                 </button>
+                </div>
                 </div>
                 <table>
                     <thead>
@@ -156,11 +189,17 @@ export default function DividaPage(){
                             disabled={page === Math.ceil(registros / 10)}>Prox.
                         </button>
                     </div>
+                    <p>Total de dívidas: {realMask(valorDividas)} </p>
                 </div>
                 </div>
         
                 <Modal open={open}>
                     <form method="post" onSubmit={submitForm}>
+                        <ul className="erros">
+                            {erros.map((erro, index) => (
+                                <li className="erro" key={index}><FaExclamation/>{erro.mensagem}</li>
+                            ))}
+                        </ul>
                         <label>Cliente: </label>
                         <select
                             name="cliente"
@@ -177,7 +216,13 @@ export default function DividaPage(){
                             <input type="hidden" name="cliente" value={selected.cliente.id} />
                         )}
                         <label>Valor: </label>
-                        <input type="text" defaultValue={selected?.valor} name="valor" disabled={selected?.situacao} placeholder="R$ 00,0"/>
+                        <input type="text" defaultValue={selected?.valor} value={valor} name="valor" disabled={selected?.situacao}
+                        onKeyDown={(e) => {
+                        if (e.key.length == 1 && !e.key.match(/\d/)) {
+                            e.preventDefault();
+                        }
+                        }} 
+                        onChange={(e) => setValor(realMask(e.target.value))}/>
                         <label>Data de Pagamento:</label>
                         <input type="date" defaultValue={selected?.dataPagamento
               ? new Date(selected.dataPagamento).toISOString().slice(0, 10)

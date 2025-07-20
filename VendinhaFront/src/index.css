@@ -11,15 +11,15 @@ body {
   color: #818181;
 }
 
+h1{
+    font-size: 28px;
+}
 
 
 button:hover {
   cursor: pointer;
 }
 
-h1{
-    margin-bottom: 30px;
-}
 
 nav {
     display: flex;
@@ -32,18 +32,21 @@ header{
 }
 
 ul{
-    margin-top: 50px;
     list-style-type: none;
 }
 
-li{
+nav>ul{
+    margin-top: 50px;
+}
+
+nav>ul>li{
     margin-bottom: 20px;
     font-size: 20px;
 }
 
 a {
     text-decoration: none;
-    color: black;
+    color: rgb(226, 226, 226);
 }
 
 select{
@@ -62,14 +65,11 @@ main {
     width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 60px 0 0 0;
+    padding: 30px 0 0 0;
     align-items: center;
     background-color: #e6f0fa;
 }
 
-footer{
-    background-color: #ffffff;
-}
 #container{
     display: flex;
     flex-direction: column;
@@ -87,7 +87,7 @@ table {
     border-collapse: collapse;
     overflow: hidden;                      
     background-color: #ffffff;
-    font-size: 20px;
+    font-size: 18px;
     width: 100%;
 }
 
@@ -118,6 +118,7 @@ form .titulo{
 form h2 {
     margin-bottom: 10px;
 }
+
 
 .actions{
     display: flex;
@@ -186,13 +187,23 @@ form h2 {
 
 .tabela-header{
     width: 100%;
-    height: 60px;
+    height: 90px;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: center;
     background-color: #ffffff;
     border-radius: 5px 5px 0 0 ;
+}
 
+.tabela-header>h1{
+    margin-top: 5px;
+}
+
+.funcionalidades{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .tabela-footer{
@@ -200,16 +211,28 @@ form h2 {
     height: 60px;
     background-color: #ffffff;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     border-top: #ccc solid 1px;
     border-radius: 0 0 5px 5px;
+}
+
+.tabela-footer>p{
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
 }
 
 .paginacao {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    width: 300px;
+    justify-content: center;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.paginacao>p{
+    margin: 0 20px 0 20px;
 }
 
 .paginacao button{
@@ -227,8 +250,24 @@ form h2 {
     transition: 0.4s;
 }
 
+.erros>.erro{
+    background-color: #fde9e9;
+    padding: 10px;
+    border-radius: 10px;
+    color: rgb(255, 89, 89);
+    min-width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
 
-
+.erros{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
 .tabela-header input{
     height: 40px;
@@ -271,7 +310,8 @@ form h2 {
 .modal {
     position: fixed;
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     top: 0;
     left: 0;
@@ -423,11 +463,20 @@ button[type="reset"]:hover{
     margin-top: 50px;
 }
 
-.dividas .divida{
-    background-color: #d4d4d4;
+.dividas .divida {
     margin-bottom: 10px;
     border-radius: 5px;
 }
+
+.divida.paga {
+    background-color: #91eeb8; 
+}
+
+.divida.aberta {
+    background-color: #ffa6a6; 
+}
+
+
 
 .modal-view>.titulo{
     display: flex;

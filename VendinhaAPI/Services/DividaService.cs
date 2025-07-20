@@ -42,7 +42,7 @@ public class DividaService
         if (divida.Cliente.Id <= 0)
         {
             mensagens.Add(new MensagemErro("Cliente", "Cliente inválido ou não informado."));
-            return false;
+            validation = false;
         }
         
         
@@ -53,12 +53,20 @@ public class DividaService
             .Select(d => (decimal?)d.Valor)
             .Sum() ?? 0;
         
+        if (divida.DataPagamento.Date <= DateTime.Today)
+        {
+            mensagens.Add(new MensagemErro("DataPagamento", "A data de pagamento deve ser pelo menos um dia após a data atual."));
+            validation = false;
+        }
+
+        
         if (totalDividas + divida.Valor > 200)
         {
             mensagens.Add(new MensagemErro("Valor", "A soma das dívidas não pode ultrapassar R$ 200."));
-            return false;
+            validation = false;
         }
         
+       
         return validation;
         
     }
@@ -167,6 +175,11 @@ public class DividaService
         }
         return null;
 
+    }
+
+    public decimal TotalDividas()
+    {
+        return repository.Consultar<Divida>().Where(d => d.Situacao == false).Sum(d => d.Valor ?? 0);
     }
     
     public Divida Deletar(long codigo)

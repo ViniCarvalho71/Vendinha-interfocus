@@ -1,10 +1,11 @@
-import { FaPlus} from "react-icons/fa";
+import { FaPlus, FaExclamation} from "react-icons/fa";
 import { listarClientes, salvarCliente, excluirCliente} from "../../services/clienteService";
 import { salvarDivida} from "../../services/dividaService";
 import Modal from "../../components/Modal";
 import  LinhaCliente  from "./components/linhaCliente"
 import  LinhaDivida  from "./components/linhaDivida"
-import { useState, useEffect} from "react";
+import { realMask, cpfMask } from "../../utils/masks";
+import { useState, useEffect, useReducer } from "react";
 
 
 export default function ClientePage(){
@@ -19,6 +20,27 @@ export default function ClientePage(){
     const [openDivida, setOpenDivida] = useState(false);
     const [filtro, setFiltro] = useState(null);
     const [registros, setRegistros] = useState(0);
+    const [erros, setErros] = useState([]);
+    const [valor, setValor] = useReducer(
+            (oldValue, newValue) => {
+    
+                if (newValue) {
+                    
+                    return realMask(newValue);
+                }
+    
+                return newValue?.toLowerCase();
+            }, "R$ 00,00");
+    const [cpf, setCpf] = useReducer(
+            (oldValue, newValue) => {
+    
+                if (newValue) {
+                    
+                    return cpfMask(newValue);
+                }
+    
+                return newValue?.toLowerCase();
+            }, "");
 
     const fetchData = async () => {
         const resultado = await listarClientes(search, page);
@@ -47,6 +69,8 @@ export default function ClientePage(){
         if (resultado.status == 200) {
             setOpen(false);
             fetchData();
+        } else if (resultado.status == 422){
+            setErros(resultado.data);
         }
     }
 
@@ -57,7 +81,9 @@ export default function ClientePage(){
                 const formData = new FormData(form);
         
                 const divida = {
-                    valor: formData.get("valor"),
+                    valor: formData.get("valor").replace(/\s|R\$/g, '')    
+                .replace(/\./g, '')         
+                .replace(',', '.'),
                     dataPagamento: formData.get("data_nascimento"),
                     descricao: formData.get("descricao"),
                     cliente: { id: formData.get("cliente") }
@@ -66,6 +92,8 @@ export default function ClientePage(){
                 if (resultado.status == 200) {
                     setOpenDivida(false);
                     fetchData();
+                } else if (resultado.status == 422){
+                    setErros(resultado.data);
                 }
             }
     
@@ -79,6 +107,10 @@ export default function ClientePage(){
         }
     }, [search, openDeletar, page]);
 
+    useEffect(() => {
+        setErros([]);
+    }, [open, openDivida])
+
     const abrirModalDelete = (cliente) => {
         setSelected(cliente);
         setOpenDeletar(true);
@@ -86,11 +118,13 @@ export default function ClientePage(){
 
     const abrirModalEdit = (cliente) => {
         setSelected(cliente);
+        setCpf(cliente.cpf);
         setOpen(true);
     }
 
     const abrirModalView = (cliente) => {
         setSelected(cliente);
+        setCpf(cliente.cpf);
         setOpenView(true);
     }
 
@@ -118,15 +152,19 @@ export default function ClientePage(){
         <>
         <div className="tabela-container">
         <div className="tabela-header">
+        <h1>Tabela de Clientes</h1>
+        <div className="funcionalidades">
         <input type="text" placeholder="Pesquisar"
                 onChange={(e) =>
                     setSearch(e.target.value)
                 }/>
+
         <button onClick={() => {setOpen(true);
         setSelected(null); 
         }}>
             <FaPlus/>
         </button>
+        </div>
         </div>
         <table>
             <thead>
@@ -151,7 +189,7 @@ export default function ClientePage(){
                             ></LinhaCliente>
                     )
                 }
-                <tr><td>Divida total: R$ {totalGeral}</td></tr>
+                <tr><td>Divida total: {realMask(totalGeral)}</td></tr>
             </tbody>
         </table>
         <div className="tabela-footer">
@@ -168,8 +206,19 @@ export default function ClientePage(){
 
         <Modal open={open}>
             <form method="post" onSubmit={submitForm}>
+                <ul className="erros">
+                {erros.map((erro, index) => (
+                    <li className="erro" key={index}><FaExclamation/>{erro.mensagem}</li>
+                ))}
+                </ul>
                 <input defaultValue={selected?.nome} id="cliente-nome" required minLength="10" maxLength="50" name="nome" type="text" placeholder="Nome" />
-                <input type="text" defaultValue={selected?.cpf} name="cpf" placeholder="Cpf"/>
+                <input type="text" defaultValue={selected?.cpf} value={cpf} name="cpf"
+                        onKeyDown={(e) => {
+                        if (e.key.length == 1 && !e.key.match(/\d/)) {
+                            e.preventDefault();
+                        }
+                        }} 
+                        onChange={(e) => setCpf(cpfMask(e.target.value))} placeholder="000.000.000-00"/>
                 <input type="email" defaultValue={selected?.email} name="email" placeholder="Email"/>
                 <label>Data de Nascimento:</label>
                 <input type="date" defaultValue={selected?.dataNascimento
@@ -198,7 +247,8 @@ export default function ClientePage(){
                     <p>Cliente: {selected?.nome}</p>
                     <p>Cpf: {selected?.cpf}</p>
                     <p>Email: {selected?.email}</p>
-                    <p>Data de Nascimento: </p>
+                    <p>Data de Nascimento: {selected?.dataNascimento
+      ? new Date(selected.dataNascimento).toLocaleString().slice(0,10) : ''}</p>
                     <p>Idade: {selected?.idade}</p>
                 </div>
                 <h2>Dívidas:</h2>
@@ -217,6 +267,11 @@ export default function ClientePage(){
 
         <Modal open={openDivida}>
             <form method="post" onSubmit={submitFormDivida}>
+                <ul className="erros">
+                {erros.map((erro, index) => (
+                    <li className="erro" key={index}><FaExclamation/>{erro.mensagem}</li>
+                ))}
+                </ul>
                 <div className="titulo">
                     <h2>Cadastrar nova dívida para o cliente:
                     </h2>
@@ -226,7 +281,13 @@ export default function ClientePage(){
                 </div>
                 <input type="hidden" name="cliente" value={selected?.id} />
                 <label>Valor: </label>
-                <input type="text" defaultValue={selected?.valor} name="valor"  placeholder="R$ 00,0"/>
+                <input type="text" defaultValue={selected?.valor} value={valor} name="valor" disabled={selected?.situacao}
+                        onKeyDown={(e) => {
+                        if (e.key.length == 1 && !e.key.match(/\d/)) {
+                            e.preventDefault();
+                        }
+                        }} 
+                        onChange={(e) => setValor(realMask(e.target.value))}/>
                 <label>Data de Pagamento:</label>
                 <input type="date" defaultValue={selected?.dataPagamento
         ? new Date(selected.dataPagamento).toISOString().slice(0, 10)

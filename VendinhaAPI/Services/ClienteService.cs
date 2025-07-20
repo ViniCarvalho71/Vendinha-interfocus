@@ -89,6 +89,12 @@ public class ClienteService
             validation = false;
         }
         
+        if (cliente.Idade < 18)
+        {
+            mensagens.Add(new MensagemErro("dataNascimento", "O Cliente deve ser maior de 18 anos"));
+            validation = false;
+        }
+        
         var emailJaExiste = repository.Consultar<Cliente>().Count(c => c.Email == cliente.Email && c.Id != cliente.Id);
         if (emailJaExiste != 0)
         {
