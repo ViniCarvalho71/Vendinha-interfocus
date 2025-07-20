@@ -12,9 +12,11 @@ Passos para Rodar
 
 1. Clone o Repositório
 
+```bash
 git clone https://github.com/ViniCarvalho71/Vendinha-interfocus
 cd Vendinha-interfocus
 cd VendinhaAPI
+```
 
 2. Configurar o Banco de Dados
 
