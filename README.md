@@ -1,6 +1,4 @@
-Guia de Execução do Projeto
-
-Guia de Execução do Projeto
+# Guia de Execução do Projeto
 
 Este guia explica como configurar e rodar o projeto em sua máquina local.
 
@@ -14,8 +12,9 @@ Passos para Rodar
 
 1. Clone o Repositório
 
-git clone https://seu-repositorio.git
-cd nome-do-projeto
+git clone https://github.com/ViniCarvalho71/Vendinha-interfocus
+cd Vendinha-interfocus
+cd VendinhaAPI
 
 2. Configurar o Banco de Dados
 
@@ -35,10 +34,14 @@ dotnet run
 
 6. Rodar o Frontend 
 
-cd frontend
+cd VendinhaFront
 npm install
 npm run dev
 
+# Bibliotecas extras utilizadas
+
+- react-icons
+- react-router-dom
 
 
 📘 Documentação da API
