@@ -1,3 +1,46 @@
+Guia de Execução do Projeto
+
+Guia de Execução do Projeto
+
+Este guia explica como configurar e rodar o projeto em sua máquina local.
+
+Requisitos
+
+- Node.js (v18+)
+- PostgreSQL (com banco criado e credenciais configuradas)
+- .NET 8 SDK
+
+Passos para Rodar
+
+1. Clone o Repositório
+
+git clone https://seu-repositorio.git
+cd nome-do-projeto
+
+2. Configurar o Banco de Dados
+
+Certifique-se de que o PostgreSQL esteja rodando e atualizado com os dados do `appsettings.json`:
+
+"ConnectionStrings": {
+  "Default": "Server=localhost;Port=5432;Database=postgres;User Id=postgres;Password=1234"
+}
+
+3. Restaurar Dependências
+
+dotnet restore
+
+5. Rodar o Backend
+
+dotnet run
+
+6. Rodar o Frontend 
+
+cd frontend
+npm install
+npm run dev
+
+
+
 📘 Documentação da API
 # 📘 Documentação da API
 
