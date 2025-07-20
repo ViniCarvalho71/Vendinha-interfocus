@@ -19,7 +19,7 @@ cd VendinhaAPI
 ```
 
 2. Configurar o Banco de Dados
-[Script do banco] https://github.com/ViniCarvalho71/Vendinha-interfocus/blob/main/VendinhaAPI/Database/database_sql.txt
+   - Script do banco: https://github.com/ViniCarvalho71/Vendinha-interfocus/blob/main/VendinhaAPI/Database/database_sql.txt
 Certifique-se de que o PostgreSQL esteja rodando e atualizado com os dados do `appsettings.json`:
 
 "ConnectionStrings": {
